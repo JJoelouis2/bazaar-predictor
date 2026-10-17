@@ -1,0 +1,10 @@
+# Ignore Environment Variables / API Keys
+.env
+.opencode.json
+
+# Ignore Python virtual environments
+venv/
+__pycache__/
+
+# Ignore testing data
+data/
