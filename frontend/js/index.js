@@ -3,12 +3,13 @@ import {
   makeTableSortable, sparkline, baseChartOptions,
 } from "./common.js";
 
-const [meta, items, events, analytics, sparks] = await Promise.all([
+const [meta, items, events, analytics, sparks, mayors] = await Promise.all([
   loadJSON("meta.json"),
   loadJSON("items.json"),
   loadJSON("events.json"),
   loadJSON("analytics.json"),
   loadJSON("sparks.json"),
+  loadJSON("mayors.json"),
 ]);
 
 const labels = Object.fromEntries(items.map((i) => [i.id, i.label]));
@@ -126,20 +127,24 @@ function renderItems() {
   });
 }
 
+function mayorDef(id) {
+  return mayors.find((m) => m.id === id) || null;
+}
+
 function renderTabs() {
-  const counts = new Map();
-  items.forEach((i) => itemMayors(i).forEach((m) => counts.set(m, (counts.get(m) || 0) + 1)));
-  const mayors = [...counts.keys()].sort((a, b) => counts.get(b) - counts.get(a));
-  const tabs = [
-    { id: "all", label: "All", n: items.length },
-    ...mayors.map((m) => ({ id: m, label: mayorLabel(m), n: counts.get(m) })),
-  ];
   const other = items.filter((i) => !itemMayors(i).length).length;
-  if (other) tabs.push({ id: "other", label: "Other", n: other });
+  const tabs = [
+    { id: "all", name: "All", n: items.length },
+    ...mayors.map((m) => ({ id: m.id, name: m.name, n: m.items.length, phase: m.phase })),
+  ];
+  if (other) tabs.push({ id: "other", name: "Other", n: other });
   if (!tabs.some((t) => t.id === activeMayor)) activeMayor = "all";
   const el = document.getElementById("mayor-tabs");
   el.innerHTML = tabs
-    .map((t) => `<a class="tab ${t.id === activeMayor ? "active" : ""}" href="#${esc(t.id)}" data-mayor="${esc(t.id)}">${esc(t.label)}<span class="n">${t.n}</span></a>`)
+    .map((t) => {
+      const n = t.n > 0 ? `<span class="n">${t.n}</span>` : `<span class="n soon">soon</span>`;
+      return `<a class="tab ${t.id === activeMayor ? "active" : ""}" href="#${esc(t.id)}" data-mayor="${esc(t.id)}">${esc(t.name)}${n}</a>`;
+    })
     .join("");
   el.querySelectorAll(".tab").forEach((tab) => {
     tab.addEventListener("click", (ev) => {
@@ -148,6 +153,26 @@ function renderTabs() {
       history.replaceState(null, "", tab.dataset.mayor === "all" ? location.pathname : "#" + tab.dataset.mayor);
     });
   });
+}
+
+function renderPlaceholder() {
+  const el = document.getElementById("ph-title");
+  const body = document.getElementById("ph-body");
+  if (activeMayor === "other") {
+    el.textContent = "Other items";
+    body.innerHTML = "No unassigned items.";
+    return;
+  }
+  const m = mayorDef(activeMayor);
+  const name = m ? m.name : activeMayor;
+  const phase = m && m.phase ? `Phase ${m.phase}` : "";
+  const tagline = (m && m.tagline) || "";
+  el.innerHTML = `${esc(name)} <span class="badge mayor">${esc(phase || "blueprint")}</span>`;
+  body.innerHTML = [
+    tagline ? `<p>${esc(tagline)}.</p>` : "",
+    `<p>No items tracked for ${esc(name)} yet — this page is a placeholder blueprint.</p>`,
+    `<p class="muted">When ${esc(name)}'s watchlist items are added, this tab will populate with the same sections the Aatrox page uses: summary cards, watchlist, z-alerts, mayor-focus analysis and cross-item correlations.</p>`,
+  ].join("");
 }
 
 function renderPills() {
@@ -168,9 +193,17 @@ function renderPills() {
 }
 
 function applyMayor(mayor) {
-  activeMayor = mayor;
+  const valid = mayor === "all" || mayor === "other" || mayorDef(mayor) || items.some((i) => itemMayors(i).includes(mayor));
+  activeMayor = valid ? mayor : "all";
   activeGroup = "all";
   renderTabs();
+  const hasItems = items.some(matchesMayor);
+  document.getElementById("dashboard").hidden = !hasItems;
+  document.getElementById("mayor-placeholder").hidden = hasItems;
+  if (!hasItems) {
+    renderPlaceholder();
+    return;
+  }
   renderSummary();
   renderPills();
   renderItems();

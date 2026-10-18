@@ -2,6 +2,19 @@
   "phase": "aatrox",
   "phase_label": "Phase 1 — Mayor Aatrox (Slayer economy)",
   "mayor_focus": "aatrox",
+  "mayors": [
+    { "id": "aatrox", "name": "Aatrox", "phase": 1, "tagline": "Slayer economy" },
+    { "id": "marina", "name": "Marina", "phase": 2, "tagline": "Fishing & sea creatures" },
+    { "id": "cole", "name": "Cole", "phase": 3, "tagline": "Mining" },
+    { "id": "diana", "name": "Diana", "phase": 4, "tagline": "Mythological creatures & pets" },
+    { "id": "finnegan", "name": "Finnegan", "phase": 5, "tagline": "Farming" },
+    { "id": "foxy", "name": "Foxy", "phase": 6, "tagline": "Events (Spooky / Season of Jerry)" },
+    { "id": "paul", "name": "Paul", "phase": 7, "tagline": "Dungeons" },
+    { "id": "diaz", "name": "Diaz", "phase": 8, "tagline": "Economy & NPC shops" },
+    { "id": "jerry", "name": "Jerry", "phase": 9, "tagline": "Special — Jerry's Workshop" },
+    { "id": "derpy", "name": "Derpy", "phase": 10, "tagline": "Special — double drops & XP" },
+    { "id": "scorpius", "name": "Scorpius", "phase": 11, "tagline": "Special — darker auctions" }
+  ],
   "items": [
     { "id": "SUMMONING_EYE", "label": "Summoning Eye", "group": "core materials", "sector": "slayer", "mayors": ["aatrox"] },
     { "id": "TARANTULA_WEB", "label": "Tarantula Web", "group": "core materials", "sector": "slayer", "mayors": ["aatrox"] },

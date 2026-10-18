@@ -109,6 +109,10 @@ footer.site a { color: var(--muted); text-decoration: underline; }
 .tab:hover { color: var(--text); text-decoration: none; }
 .tab.active { color: var(--text); border-bottom-color: var(--accent); }
 .tab .n { color: var(--muted); font-size: 11px; margin-left: 4px; }
+.tab .n.soon { color: var(--amber); text-transform: uppercase; letter-spacing: .04em; }
+
+.placeholder .panel h2 { font-size: 16px; margin: 0 0 8px; }
+.placeholder .panel p { margin: 6px 0; }
 
 .pill-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
 .pill { padding: 4px 10px; border: 1px solid var(--border); border-radius: 999px; font-size: 12px; color: var(--muted); cursor: pointer; background: var(--panel); }

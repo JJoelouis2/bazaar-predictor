@@ -138,6 +138,41 @@ def events_payload(terms, calendar):
     }
 
 
+def mayors_payload(watch, items_out):
+    by_mayor = {}
+    for item in items_out:
+        for mid in item.get("mayors", []):
+            by_mayor.setdefault(mid, []).append(item["id"])
+    out = []
+    seen = set()
+    for entry in watch.get("mayors", []):
+        mid = entry["id"]
+        seen.add(mid)
+        out.append(
+            {
+                "id": mid,
+                "name": entry.get("name", mid.title()),
+                "phase": entry.get("phase"),
+                "tagline": entry.get("tagline"),
+                "items": by_mayor.get(mid, []),
+                "active": bool(by_mayor.get(mid)),
+            }
+        )
+    for mid, ids in by_mayor.items():
+        if mid not in seen:
+            out.append(
+                {
+                    "id": mid,
+                    "name": mid.title(),
+                    "phase": None,
+                    "tagline": None,
+                    "items": ids,
+                    "active": True,
+                }
+            )
+    return out
+
+
 def main():
     watch = load_watchlist()
     calendar = load_calendar()
@@ -169,7 +204,9 @@ def main():
             f.unlink()
     save_json(FRONTEND_DATA / "sparks.json", sparks)
 
-    save_json(FRONTEND_DATA / "items.json", items_payload(frames, watch, predictions, analytics))
+    items_out = items_payload(frames, watch, predictions, analytics)
+    save_json(FRONTEND_DATA / "items.json", items_out)
+    save_json(FRONTEND_DATA / "mayors.json", mayors_payload(watch, items_out))
     save_json(FRONTEND_DATA / "analytics.json", analytics)
     save_json(FRONTEND_DATA / "events.json", events_payload(terms, calendar))
     save_json(
