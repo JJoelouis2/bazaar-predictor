@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bazaar Analysis — SkyBlock Price Intelligence</title>
+<link rel="stylesheet" href="css/styles.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<header class="site">
+  <h1>Bazaar Analysis <span class="badge mayor" id="phase-badge">…</span></h1>
+  <div class="sub">
+    SkyBlock bazaar price history, event-aware analytics and 6h/24h forecasts ·
+    data updated <span id="generated-at">…</span> ·
+    <a href="https://sky.coflnet.com" target="_blank" rel="noopener">history via Coflnet</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="grid-cards" id="summary-cards"></div>
+
+  <section>
+    <h2>Watchlist <span class="hint">click a row for charts · click headers to sort</span></h2>
+    <div class="pill-row" id="group-pills"></div>
+    <table id="items-table">
+      <thead>
+        <tr>
+          <th class="l">Item</th>
+          <th>Trend 4d</th>
+          <th>Mid</th>
+          <th>24h</th>
+          <th>7d</th>
+          <th>Z30</th>
+          <th>Spread</th>
+          <th>Liquidity</th>
+          <th>6h pred</th>
+          <th>24h pred</th>
+          <th>Skill</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Alerts <span class="hint">|Z| ≥ threshold on 30d rolling z-score</span></h2>
+    <div class="two-col">
+      <div class="panel">
+        <h3>Currently flagged</h3>
+        <div id="alerts-current" class="muted">none</div>
+      </div>
+      <div class="panel">
+        <h3>Recent crossings (90d)</h3>
+        <div style="max-height:320px;overflow:auto"><table id="alerts-history"><thead>
+          <tr><th class="l">Item</th><th>Time</th><th>Z</th><th>Mid</th></tr>
+        </thead><tbody></tbody></table></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Mayor focus analysis <span class="hint" id="focus-hint"></span></h2>
+    <div class="grid-cards" id="focus-cards"></div>
+    <div class="two-col">
+      <div class="panel">
+        <h3>Item sensitivity (active vs baseline |24h return|)</h3>
+        <table id="focus-table"><thead>
+          <tr><th class="l">Item</th><th>Vol ratio</th><th>Active |ret|</th><th>Base |ret|</th><th>Mean ret (active)</th></tr>
+        </thead><tbody></tbody></table>
+      </div>
+      <div class="panel">
+        <h3>First-24h effect on slayer items (per term)</h3>
+        <div style="max-height:340px;overflow:auto"><table id="day1-table"><thead>
+          <tr><th class="l">Term</th><th>Year</th><th>Item</th><th>Δ24h</th></tr>
+        </thead><tbody></tbody></table></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Cross-item correlation <span class="hint">7d rolling correlation of 2h log-returns, |Z30| ≤ 3 filtered, 90d window</span></h2>
+    <div class="two-col">
+      <div class="panel">
+        <h3>Strongest pairs</h3>
+        <table id="pairs-table"><thead>
+          <tr><th class="l">A</th><th class="l">B</th><th>Corr</th></tr>
+        </thead><tbody></tbody></table>
+      </div>
+      <div class="panel">
+        <h3>Correlation matrix</h3>
+        <div style="overflow:auto"><table class="heat" id="heat-table"></table></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site" id="site-footer"></footer>
+
+<script type="module" src="js/index.js"></script>
+</body>
+</html>

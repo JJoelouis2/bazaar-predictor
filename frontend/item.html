@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Item — Bazaar Analysis</title>
+<link rel="stylesheet" href="css/styles.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="back"><a href="index.html">← watchlist</a></div>
+  <h1 id="item-title">…</h1>
+  <div class="sub" id="item-sub"></div>
+</header>
+
+<main class="wrap">
+  <div class="grid-cards" id="item-cards"></div>
+
+  <section class="two-col">
+    <div class="panel">
+      <h3>Forecast</h3>
+      <div id="forecast"></div>
+    </div>
+    <div class="panel">
+      <h3>Momentum &amp; position</h3>
+      <div id="momentum"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Price history <span class="hint">2h grid for last 90d, daily before · Coflnet backfill + live collection</span></h2>
+    <div class="panel chart-box"><canvas id="price-chart"></canvas></div>
+  </section>
+
+  <section class="two-col">
+    <div class="panel">
+      <h3>Z-score (30d)</h3>
+      <div class="chart-box short"><canvas id="z-chart"></canvas></div>
+    </div>
+    <div class="panel">
+      <h3>Weekly moving volume</h3>
+      <div class="chart-box short"><canvas id="vol-chart"></canvas></div>
+    </div>
+  </section>
+
+  <section class="two-col">
+    <div class="panel">
+      <h3>Co-movers (7d return correlation)</h3>
+      <table id="neighbors-table"><thead><tr><th class="l">Item</th><th>Corr</th></tr></thead><tbody></tbody></table>
+    </div>
+    <div class="panel">
+      <h3>Focus-mayor sensitivity</h3>
+      <div id="focus-box" class="muted"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Mayor terms <span class="hint" id="terms-hint"></span></h2>
+    <table id="terms-table"><thead>
+      <tr><th>Start</th><th>End</th><th class="l">Mayor</th><th class="l">Minister</th><th>Year</th><th class="l">Source</th><th>Δ24h at start</th></tr>
+    </thead><tbody></tbody></table>
+  </section>
+</main>
+
+<footer class="site" id="site-footer"></footer>
+
+<script type="module" src="js/item.js"></script>
+</body>
+</html>

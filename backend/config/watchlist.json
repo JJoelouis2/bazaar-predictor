@@ -1,0 +1,27 @@
+{
+  "phase": "aatrox",
+  "phase_label": "Phase 1 — Mayor Aatrox (Slayer economy)",
+  "mayor_focus": "aatrox",
+  "items": [
+    { "id": "SUMMONING_EYE", "label": "Summoning Eye", "group": "summons", "sector": "slayer", "mayors": ["aatrox"] },
+    { "id": "TARANTULA_WEB", "label": "Tarantula Web", "group": "summons", "sector": "slayer", "mayors": ["aatrox"] },
+    { "id": "REVENANT_FLESH", "label": "Revenant Flesh", "group": "summons", "sector": "slayer", "mayors": ["aatrox"] },
+    { "id": "WOLF_TOOTH", "label": "Wolf Tooth", "group": "summons", "sector": "slayer", "mayors": ["aatrox"] },
+    { "id": "NULL_SPHERE", "label": "Null Sphere", "group": "summons", "sector": "slayer", "mayors": ["aatrox"] },
+    { "id": "KUUDRA_TENTACLE", "label": "Kuudra Tentacle", "group": "summons", "sector": "slayer", "mayors": ["aatrox"] },
+    { "id": "TARANTULA_SILK", "label": "Tarantula Silk", "group": "drops", "sector": "slayer", "mayors": ["aatrox"] },
+    { "id": "TOXIC_ARROW_POISON", "label": "Toxic Arrow Poison", "group": "drops", "sector": "slayer", "mayors": ["aatrox"] },
+    { "id": "FOUL_FLESH", "label": "Foul Flesh", "group": "drops", "sector": "slayer", "mayors": ["aatrox"] },
+    { "id": "REVENANT_VISCERA", "label": "Revenant Visera", "group": "drops", "sector": "slayer", "mayors": ["aatrox"] },
+    { "id": "FLEXBONE", "label": "Flexbone", "group": "drops", "sector": "slayer", "mayors": ["aatrox"] },
+    { "id": "BURNING_EYE", "label": "Burning Eye", "group": "drops", "sector": "slayer", "mayors": ["aatrox"] },
+    { "id": "ESSENCE_SPIDER", "label": "Spider Essence", "group": "drops", "sector": "slayer", "mayors": ["aatrox"] },
+    { "id": "ENCHANTED_BLAZE_ROD", "label": "Enchanted Blaze Rod", "group": "drops", "sector": "slayer", "mayors": ["aatrox"] },
+    { "id": "ENCHANTED_SPIDER_EYE", "label": "Enchanted Spider Eye", "group": "chain", "sector": "slayer", "mayors": ["aatrox"] },
+    { "id": "ENCHANTED_ROTTEN_FLESH", "label": "Enchanted Rotten Flesh", "group": "chain", "sector": "slayer", "mayors": ["aatrox"] },
+    { "id": "ENCHANTED_EYE_OF_ENDER", "label": "Enchanted Eye of Ender", "group": "chain", "sector": "slayer", "mayors": ["aatrox"] },
+    { "id": "BOOSTER_COOKIE", "label": "Booster Cookie", "group": "control", "sector": "economy", "mayors": ["diaz"] },
+    { "id": "RECOMBOBULATOR_3000", "label": "Recombobulator 3000", "group": "control", "sector": "combat", "mayors": ["paul"] },
+    { "id": "ENCHANTMENT_ULTIMATE_LEGION_1", "label": "Ultimate Legion I", "group": "control", "sector": "combat", "mayors": [] }
+  ]
+}
