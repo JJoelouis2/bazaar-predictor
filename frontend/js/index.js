@@ -28,6 +28,7 @@ function renderSummary() {
   const t = events.current || {};
   const focus = analytics.focus || {};
   const agg = focus.aggregate || {};
+  const shown = items.filter(matchesMayor);
   const cards = [
     {
       k: "Sitting mayor",
@@ -41,13 +42,15 @@ function renderSummary() {
     },
     {
       k: "Alerts",
-      v: (analytics.alerts || []).length,
+      v: (analytics.alerts || []).filter((a) => visibleIds().has(a.item_id)).length,
       s: `|Z30| ≥ ${analytics.z_threshold}`,
     },
     {
       k: "Tracked items",
-      v: items.length,
-      s: `phase: ${meta.phase}`,
+      v: shown.length,
+      s: activeMayor === "all"
+        ? `phase: ${meta.phase}`
+        : `mayor: ${mayorLabel(activeMayor)} · ${items.length} total`,
     },
     {
       k: `${focus.mayor || "focus"} vol ratio`,
@@ -88,8 +91,32 @@ function rowHtml(item) {
   </tr>`;
 }
 
-function renderItems(group = "all") {
-  const filtered = group === "all" ? items : items.filter((i) => i.group === group);
+let activeMayor = location.hash.slice(1) || "all";
+let activeGroup = "all";
+
+function mayorLabel(id) {
+  return id.charAt(0).toUpperCase() + id.slice(1);
+}
+
+function itemMayors(item) {
+  return item.mayors || [];
+}
+
+function matchesMayor(item) {
+  if (activeMayor === "all") return true;
+  const ms = itemMayors(item);
+  if (activeMayor === "other") return ms.length === 0;
+  return ms.includes(activeMayor);
+}
+
+function visibleIds() {
+  return new Set(items.filter(matchesMayor).map((i) => i.id));
+}
+
+function renderItems() {
+  const filtered = items
+    .filter(matchesMayor)
+    .filter((i) => activeGroup === "all" || i.group === activeGroup);
   const tbody = document.querySelector("#items-table tbody");
   tbody.innerHTML = filtered.map(rowHtml).join("");
   tbody.querySelectorAll("tr").forEach((tr) => {
@@ -99,23 +126,62 @@ function renderItems(group = "all") {
   });
 }
 
-function renderPills() {
-  const groups = ["all", ...new Set(items.map((i) => i.group))];
-  const el = document.getElementById("group-pills");
-  el.innerHTML = groups
-    .map((g) => `<span class="pill ${g === "all" ? "active" : ""}" data-group="${g}">${g}</span>`)
+function renderTabs() {
+  const counts = new Map();
+  items.forEach((i) => itemMayors(i).forEach((m) => counts.set(m, (counts.get(m) || 0) + 1)));
+  const mayors = [...counts.keys()].sort((a, b) => counts.get(b) - counts.get(a));
+  const tabs = [
+    { id: "all", label: "All", n: items.length },
+    ...mayors.map((m) => ({ id: m, label: mayorLabel(m), n: counts.get(m) })),
+  ];
+  const other = items.filter((i) => !itemMayors(i).length).length;
+  if (other) tabs.push({ id: "other", label: "Other", n: other });
+  if (!tabs.some((t) => t.id === activeMayor)) activeMayor = "all";
+  const el = document.getElementById("mayor-tabs");
+  el.innerHTML = tabs
+    .map((t) => `<a class="tab ${t.id === activeMayor ? "active" : ""}" href="#${esc(t.id)}" data-mayor="${esc(t.id)}">${esc(t.label)}<span class="n">${t.n}</span></a>`)
     .join("");
-  el.querySelectorAll(".pill").forEach((pill) => {
-    pill.addEventListener("click", () => {
-      el.querySelectorAll(".pill").forEach((p) => p.classList.remove("active"));
-      pill.classList.add("active");
-      renderItems(pill.dataset.group);
+  el.querySelectorAll(".tab").forEach((tab) => {
+    tab.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      applyMayor(tab.dataset.mayor);
+      history.replaceState(null, "", tab.dataset.mayor === "all" ? location.pathname : "#" + tab.dataset.mayor);
     });
   });
 }
 
+function renderPills() {
+  const pool = items.filter(matchesMayor);
+  const groups = ["all", ...new Set(pool.map((i) => i.group))];
+  if (!groups.includes(activeGroup)) activeGroup = "all";
+  const el = document.getElementById("group-pills");
+  el.innerHTML = groups
+    .map((g) => `<span class="pill ${g === activeGroup ? "active" : ""}" data-group="${esc(g)}">${esc(g)}</span>`)
+    .join("");
+  el.querySelectorAll(".pill").forEach((pill) => {
+    pill.addEventListener("click", () => {
+      activeGroup = pill.dataset.group;
+      renderPills();
+      renderItems();
+    });
+  });
+}
+
+function applyMayor(mayor) {
+  activeMayor = mayor;
+  activeGroup = "all";
+  renderTabs();
+  renderSummary();
+  renderPills();
+  renderItems();
+  renderAlerts();
+  renderFocus();
+  renderCorrelations();
+}
+
 function renderAlerts() {
-  const cur = analytics.alerts || [];
+  const ids = visibleIds();
+  const cur = (analytics.alerts || []).filter((a) => ids.has(a.item_id));
   document.getElementById("alerts-current").innerHTML = cur.length
     ? `<table><thead><tr><th class="l">Item</th><th>Z</th><th>Mid</th><th>Time</th></tr></thead><tbody>${
         cur.map((a) => `<tr><td class="l"><a href="item.html?id=${a.item_id}">${esc(labels[a.item_id] || a.item_id)}</a>
@@ -123,7 +189,7 @@ function renderAlerts() {
           <td class="mono">${a.z.toFixed(2)}</td><td class="mono">${fmtPrice(a.mid)}</td><td class="mono muted">${a.t}</td></tr>`).join("")
       }</tbody></table>`
     : "No items currently beyond the z-threshold.";
-  const hist = analytics.alert_history || [];
+  const hist = (analytics.alert_history || []).filter((a) => ids.has(a.item_id));
   document.querySelector("#alerts-history tbody").innerHTML = hist
     .map((a) => `<tr><td class="l"><a href="item.html?id=${a.item_id}">${esc(labels[a.item_id] || a.item_id)}</a></td>
       <td class="mono muted">${a.t}</td><td class="mono ${a.direction === "up" ? "pos" : "neg"}">${a.z.toFixed(2)}</td>
@@ -133,9 +199,10 @@ function renderAlerts() {
 
 function renderFocus() {
   const focus = analytics.focus || {};
+  const ids = visibleIds();
   document.getElementById("focus-hint").textContent =
     `mayor "${focus.mayor}" periods across the full calendar (weight ${events.minister_weight} when minister)`;
-  const per = (focus.per_item || []).slice().sort((a, b) => b.vol_ratio - a.vol_ratio);
+  const per = (focus.per_item || []).filter((p) => ids.has(p.item_id)).sort((a, b) => b.vol_ratio - a.vol_ratio);
   document.querySelector("#focus-table tbody").innerHTML = per
     .map((p) => `<tr><td class="l"><a href="item.html?id=${p.item_id}">${esc(p.label)}</a></td>
       <td class="mono ${p.vol_ratio > 1 ? "pos" : "neg"}">${p.vol_ratio.toFixed(2)}x</td>
@@ -143,7 +210,7 @@ function renderFocus() {
       <td class="mono">${(p.abs_ret_base * 100).toFixed(2)}%</td>
       <td class="mono ${signClass(p.mean_ret_active)}">${fmtPct(p.mean_ret_active)}</td></tr>`)
     .join("");
-  const day1 = (focus.day1_effects || []).slice().sort((a, b) => (b.start || "").localeCompare(a.start || ""));
+  const day1 = (focus.day1_effects || []).filter((e) => ids.has(e.item_id)).sort((a, b) => (b.start || "").localeCompare(a.start || ""));
   document.querySelector("#day1-table tbody").innerHTML = day1
     .map((e) => `<tr><td class="mono muted">${e.start}</td><td class="mono">${e.year ?? "—"}</td>
       <td class="l">${esc(labels[e.item_id] || e.item_id)}</td>
@@ -153,19 +220,22 @@ function renderFocus() {
 
 function renderCorrelations() {
   const corr = analytics.correlations || {};
+  const vis = visibleIds();
   document.querySelector("#pairs-table tbody").innerHTML = (corr.top_pairs || [])
+    .filter((p) => vis.has(p.a) && vis.has(p.b))
     .map((p) => `<tr><td class="l"><a href="item.html?id=${p.a}">${esc(labels[p.a] || p.a)}</a></td>
       <td class="l"><a href="item.html?id=${p.b}">${esc(labels[p.b] || p.b)}</a></td>
       <td class="mono ${corrColor(p.corr) ? signClass(p.corr) : ""}">${p.corr.toFixed(3)}</td></tr>`)
     .join("");
-  const ids = corr.items || [];
-  let html = "<thead><tr><th></th>" + ids.map((i) => `<th>${esc(labels[i] || i)}</th>`).join("") + "</tr></thead><tbody>";
-  ids.forEach((a, ri) => {
+  const sub = (corr.items || []).map((id, i) => [id, i]).filter(([id]) => vis.has(id));
+  let html = "<thead><tr><th></th>" + sub.map(([id]) => `<th>${esc(labels[id] || id)}</th>`).join("") + "</tr></thead><tbody>";
+  sub.forEach(([a, ai]) => {
     html += `<tr><th class="l">${esc(labels[a] || a)}</th>`;
-    ids.forEach((b, ci) => {
-      const v = corr.matrix[ri][ci];
-      const txt = ri === ci ? "1" : v === null ? "" : v.toFixed(2);
-      html += `<td class="${ri === ci ? "diag" : ""}" style="background:${ri === ci ? "" : corrColor(v)}" title="${esc(labels[a])} × ${esc(labels[b])}: ${v}">${txt}</td>`;
+    sub.forEach(([b, bi]) => {
+      const v = corr.matrix[ai][bi];
+      const diag = ai === bi;
+      const txt = diag ? "1" : v === null ? "" : v.toFixed(2);
+      html += `<td class="${diag ? "diag" : ""}" style="background:${diag ? "" : corrColor(v)}" title="${esc(labels[a])} × ${esc(labels[b])}: ${v}">${txt}</td>`;
     });
     html += "</tr>";
   });
@@ -180,12 +250,7 @@ function renderFooter() {
 }
 
 renderHeader();
-renderSummary();
-renderPills();
-renderItems();
-renderAlerts();
-renderFocus();
-renderCorrelations();
+applyMayor(activeMayor);
 renderFooter();
 ["#items-table", "#alerts-history", "#focus-table", "#day1-table", "#pairs-table"].forEach((sel) => {
   const t = document.querySelector(sel);

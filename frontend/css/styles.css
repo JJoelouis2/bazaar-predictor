@@ -104,6 +104,12 @@ footer.site a { color: var(--muted); text-decoration: underline; }
 
 .spark { width: 90px; height: 26px; }
 
+.tab-row { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 16px; border-bottom: 1px solid var(--border); }
+.tab { padding: 7px 13px; font-size: 13px; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.tab:hover { color: var(--text); text-decoration: none; }
+.tab.active { color: var(--text); border-bottom-color: var(--accent); }
+.tab .n { color: var(--muted); font-size: 11px; margin-left: 4px; }
+
 .pill-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
 .pill { padding: 4px 10px; border: 1px solid var(--border); border-radius: 999px; font-size: 12px; color: var(--muted); cursor: pointer; background: var(--panel); }
 .pill.active { color: var(--text); border-color: var(--accent); }
