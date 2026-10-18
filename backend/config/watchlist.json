@@ -2,6 +2,15 @@
   "phase": "aatrox",
   "phase_label": "Phase 1 — Mayor Aatrox (Slayer economy)",
   "mayor_focus": "aatrox",
+  "effects": {
+    "intervals": [
+      { "id": "pre", "label": "1d before", "start_off_days": -1, "end_off_days": 0 },
+      { "id": "day1", "label": "1d during", "start_off_days": 0, "end_off_days": 1 },
+      { "id": "post", "label": "1d after", "start_off_days": 1, "end_off_days": 2 }
+    ],
+    "min_points": 6,
+    "max_stale_h": 48
+  },
   "mayors": [
     { "id": "aatrox", "name": "Aatrox", "phase": 1, "tagline": "Slayer economy" },
     { "id": "marina", "name": "Marina", "phase": 2, "tagline": "Fishing & sea creatures" },

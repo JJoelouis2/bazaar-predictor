@@ -3,13 +3,14 @@ import {
   makeTableSortable, sparkline, baseChartOptions,
 } from "./common.js";
 
-const [meta, items, events, analytics, sparks, mayors] = await Promise.all([
+const [meta, items, events, analytics, sparks, mayors, effects] = await Promise.all([
   loadJSON("meta.json"),
   loadJSON("items.json"),
   loadJSON("events.json"),
   loadJSON("analytics.json"),
   loadJSON("sparks.json"),
   loadJSON("mayors.json"),
+  loadJSON("mayor_effects.json"),
 ]);
 
 const labels = Object.fromEntries(items.map((i) => [i.id, i.label]));
@@ -94,6 +95,7 @@ function rowHtml(item) {
 
 let activeMayor = location.hash.slice(1) || "all";
 let activeGroup = "all";
+let effectsRole = "mayor";
 
 function mayorLabel(id) {
   return id.charAt(0).toUpperCase() + id.slice(1);
@@ -175,6 +177,80 @@ function renderPlaceholder() {
   ].join("");
 }
 
+function intervalPx(mid, iv) {
+  if (!iv || iv.pred_px === null || iv.pred_px === undefined) return "—";
+  return fmtPrice(iv.pred_px);
+}
+
+function renderMayorEffects() {
+  const sec = document.getElementById("mayor-effects");
+  const def = effects.mayors ? effects.mayors[activeMayor] : null;
+  if (!def) {
+    sec.hidden = true;
+    return;
+  }
+  sec.hidden = false;
+  const intervals = effects.intervals || [];
+  document.getElementById("effects-title").textContent = `${def.name} — inauguration effect`;
+  document.getElementById("effects-hint").textContent =
+    "static historical medians over intervals around inauguration (not a live forecast)";
+
+  const roleEl = document.getElementById("effects-role");
+  const roleData = (def.roles || {})[effectsRole] || { n_terms: 0, by_interval: {}, items: [] };
+  const roleLabel = { mayor: "As mayor", minister: "As minister" };
+  roleEl.innerHTML = ["mayor", "minister"]
+    .map((r) => {
+      const n = ((def.roles || {})[r] || {}).n_terms || 0;
+      return `<button class="role-btn ${r === effectsRole ? "active" : ""}" data-role="${r}">${roleLabel[r]} <span class="n">${n}</span></button>`;
+    })
+    .join("");
+  roleEl.querySelectorAll(".role-btn").forEach((b) => {
+    b.addEventListener("click", () => {
+      effectsRole = b.dataset.role;
+      renderMayorEffects();
+    });
+  });
+
+  const cardsEl = document.getElementById("effects-cards");
+  if (!def.items.length) {
+    cardsEl.innerHTML = "";
+    document.querySelector("#effects-table thead").innerHTML = "";
+    document.querySelector("#effects-table tbody").innerHTML =
+      `<tr><td class="muted">No items tagged for ${esc(def.name)} yet — the inauguration predictor fills in once its watchlist items are curated.</td></tr>`;
+    return;
+  }
+
+  cardsEl.innerHTML = intervals
+    .map((iv) => {
+      const s = roleData.by_interval[iv.id];
+      const val = s ? fmtPct(s.median) : "—";
+      const sub = s
+        ? `${s.n_items} items · ${(s.pos_rate * 100).toFixed(0)}% rose · ${roleData.n_terms} terms`
+        : `${roleData.n_terms} terms · insufficient data`;
+      return `<div class="card"><div class="k">${esc(iv.label)}</div><div class="v ${s ? signClass(s.median) : ""}">${val}</div><div class="s">${esc(sub)}</div></div>`;
+    })
+    .join("");
+
+  const head = `<tr><th class="l">Item</th><th>Mid</th>${intervals
+    .map((iv) => `<th>${esc(iv.label)}</th><th>px</th>`)
+    .join("")}</tr>`;
+  document.querySelector("#effects-table thead").innerHTML = head;
+  document.querySelector("#effects-table tbody").innerHTML = roleData.items
+    .map((rec) => {
+      const cells = intervals
+        .map((iv) => {
+          const s = rec.intervals[iv.id];
+          const pct = s ? fmtPct(s.median) : "—";
+          return `<td class="mono ${s ? signClass(s.median) : ""}">${pct}<span class="muted"> n${s ? s.n : 0}</span></td>` +
+            `<td class="mono">${intervalPx(rec.mid, s)}</td>`;
+        })
+        .join("");
+      return `<tr><td class="l"><a href="item.html?id=${encodeURIComponent(rec.item_id)}">${esc(rec.label)}</a></td>` +
+        `<td class="mono">${fmtPrice(rec.mid)}</td>${cells}</tr>`;
+    })
+    .join("");
+}
+
 function renderPills() {
   const pool = items.filter(matchesMayor);
   const groups = ["all", ...new Set(pool.map((i) => i.group))];
@@ -197,6 +273,12 @@ function applyMayor(mayor) {
   activeMayor = valid ? mayor : "all";
   activeGroup = "all";
   renderTabs();
+  const isRealMayor = activeMayor !== "all" && activeMayor !== "other" && (effects.mayors && effects.mayors[activeMayor]);
+  document.getElementById("mayor-effects").hidden = !(isRealMayor);
+  if (isRealMayor) {
+    effectsRole = "mayor";
+    renderMayorEffects();
+  }
   const hasItems = items.some(matchesMayor);
   document.getElementById("dashboard").hidden = !hasItems;
   document.getElementById("mayor-placeholder").hidden = hasItems;

@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 
 from analytics import compute_analytics, current_term
+from events import mayor_effect_study
 from common import (
     ELECTIONS_PATH,
     FRONTEND_DATA,
@@ -207,6 +208,7 @@ def main():
     items_out = items_payload(frames, watch, predictions, analytics)
     save_json(FRONTEND_DATA / "items.json", items_out)
     save_json(FRONTEND_DATA / "mayors.json", mayors_payload(watch, items_out))
+    save_json(FRONTEND_DATA / "mayor_effects.json", mayor_effect_study(terms, frames, watch))
     save_json(FRONTEND_DATA / "analytics.json", analytics)
     save_json(FRONTEND_DATA / "events.json", events_payload(terms, calendar))
     save_json(

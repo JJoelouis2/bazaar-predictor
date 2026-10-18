@@ -111,6 +111,12 @@ footer.site a { color: var(--muted); text-decoration: underline; }
 .tab .n { color: var(--muted); font-size: 11px; margin-left: 4px; }
 .tab .n.soon { color: var(--amber); text-transform: uppercase; letter-spacing: .04em; }
 
+.effects-head { display: flex; align-items: center; justify-content: space-between; margin: 0 0 8px; }
+.role-toggle { display: flex; gap: 4px; background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; padding: 2px; }
+.role-btn { border: 0; background: transparent; color: var(--muted); padding: 4px 8px; border-radius: 8px; font-size: 12px; cursor: pointer; }
+.role-btn.active { background: var(--bg); color: var(--text); }
+.role-btn .n { margin-left: 2px; color: var(--muted); }
+
 .placeholder .panel h2 { font-size: 16px; margin: 0 0 8px; }
 .placeholder .panel p { margin: 6px 0; }
 
