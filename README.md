@@ -2,19 +2,7 @@
 
 SkyBlock bazaar price intelligence: event-aware analytics (mayor / minister terms, z-scores,
 cross-item correlation) and short-horizon forecasts for a curated watchlist of items,
-published as a static site on GitHub Pages.
-
-Phase 1 focuses on the **Aatrox / slayer economy**:
-
-| group | items |
-| --- | --- |
-| summons | Summoning Eye, Tarantula Web, Revenant Flesh, Wolf Tooth, Null Sphere, Kuudra Tentacle |
-| drops | Tarantula Silk, Toxic Arrow Poison, Foul Flesh, Revenant Viscera, Flexbone, Burning Eye, Spider Essence, Enchanted Blaze Rod |
-| chain | Enchanted Spider Eye, Enchanted Rotten Flesh, Enchanted Eye of Ender |
-| control | Booster Cookie, Recombobulator 3000, Ultimate Legion I |
-
-Rollout continues mayor by mayor (Aatrox â†’ Marina â†’ Cole â†’ Diana â†’ Finnegan â†’ Foxy â†’ Paul â†’ Diaz â†’ Jerry/Derpy)
-by editing `backend/config/watchlist.json`.
+published as a static site on GitHub Pages (https://jjoelouis2.github.io/bazaar-predictor).
 
 ## Data sources
 
