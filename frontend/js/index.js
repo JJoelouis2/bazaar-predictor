@@ -28,7 +28,7 @@ function renderHeader() {
 
 function renderSummary() {
   const t = events.current || {};
-  const focus = analytics.focus || {};
+  const focus = activeFocus();
   const agg = focus.aggregate || {};
   const shown = items.filter(matchesMayor);
   const cards = [
@@ -56,17 +56,17 @@ function renderSummary() {
     },
     {
       k: `${focus.mayor || "focus"} vol ratio`,
-      v: agg.median_vol_ratio_slayer === null || agg.median_vol_ratio_slayer === undefined
+      v: agg.median_vol_ratio === null || agg.median_vol_ratio === undefined
         ? "—"
-        : agg.median_vol_ratio_slayer.toFixed(2) + "x",
-      s: `slayer items · ${agg.n_mayor_terms || 0} terms as mayor, ${agg.n_minister_terms || 0} as minister`,
+        : agg.median_vol_ratio.toFixed(2) + "x",
+      s: `${focus.mayor || "focus"} items · ${agg.n_mayor_terms || 0} terms as mayor, ${agg.n_minister_terms || 0} as minister`,
     },
     {
       k: "Election day-1 effect",
-      v: agg.median_day1_pct_slayer === null || agg.median_day1_pct_slayer === undefined
+      v: agg.median_day1_pct === null || agg.median_day1_pct === undefined
         ? "—"
-        : fmtPct(agg.median_day1_pct_slayer),
-      s: "median 24h move on inauguration (slayer)",
+        : fmtPct(agg.median_day1_pct),
+      s: `median 24h move on inauguration (${focus.mayor || "focus"})`,
     },
   ];
   document.getElementById("summary-cards").innerHTML = cards
@@ -114,6 +114,14 @@ function matchesMayor(item) {
 
 function visibleIds() {
   return new Set(items.filter(matchesMayor).map((i) => i.id));
+}
+
+function activeFocus() {
+  const byMayor = analytics.focus_by_mayor || {};
+  if (activeMayor !== "all" && activeMayor !== "other" && byMayor[activeMayor]) {
+    return byMayor[activeMayor];
+  }
+  return analytics.focus || {};
 }
 
 function renderItems() {
@@ -313,10 +321,10 @@ function renderAlerts() {
 }
 
 function renderFocus() {
-  const focus = analytics.focus || {};
+  const focus = activeFocus();
   const ids = visibleIds();
   document.getElementById("focus-hint").textContent =
-    `mayor "${focus.mayor}" periods across the full calendar (weight ${events.minister_weight} when minister)`;
+    `mayor "${focus.mayor || "—"}" periods across the full calendar (weight ${events.minister_weight} when minister)`;
   const per = (focus.per_item || []).filter((p) => ids.has(p.item_id)).sort((a, b) => b.vol_ratio - a.vol_ratio);
   document.querySelector("#focus-table tbody").innerHTML = per
     .map((p) => `<tr><td class="l"><a href="item.html?id=${p.item_id}">${esc(p.label)}</a></td>

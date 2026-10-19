@@ -108,13 +108,13 @@ def correlation_matrix(frames, ids):
     return {"items": ids, "matrix": matrix, "top_pairs": pairs[:15], "neighbors": neighbors}
 
 
-def term_day1_effects(frames, terms, mayor_id, sector_items):
+def term_day1_effects(frames, terms, mayor_id, item_ids):
     effects = []
     for term in terms:
         if term.get("mayor") != mayor_id:
             continue
         start = pd.Timestamp(term["start"])
-        for item_id in sector_items:
+        for item_id in item_ids:
             df = frames.get(item_id)
             if df is None:
                 continue
@@ -134,20 +134,23 @@ def term_day1_effects(frames, terms, mayor_id, sector_items):
     return effects
 
 
-def focus_analysis(frames, terms, watch):
-    focus = watch.get("mayor_focus")
-    if not focus:
-        return None
-    items = watch["items"]
-    sector_items = [i["id"] for i in items if i.get("sector") == "slayer"]
+def mayor_active_mask(df, mayor_id):
+    mcol = f"mayor_{mayor_id}"
+    ncol = f"minister_{mayor_id}"
+    if mcol in df.columns:
+        return (df[mcol] > 0) | (df.get(ncol, 0) > 0)
+    return df["focus_active"] > 0
+
+
+def focus_analysis_for(frames, terms, mayor_id, tagged):
     per_item = []
-    for item in items:
+    for item in tagged:
         df = frames.get(item["id"])
         if df is None:
             continue
         ret = df["ret_24h"]
-        active = df["focus_active"] > 0
-        base = (df["labeled"] == 1) & (df["focus_active"] == 0) & (df["stale_h"] < 48)
+        active = mayor_active_mask(df, mayor_id)
+        base = (df["labeled"] == 1) & (~active) & (df["stale_h"] < 48)
         a_vals = ret[active].dropna()
         b_vals = ret[base].dropna()
         if len(a_vals) < 10 or len(b_vals) < 100:
@@ -165,25 +168,35 @@ def focus_analysis(frames, terms, watch):
                 "mean_ret_base": round(float(b_vals.mean()), 6),
             }
         )
-    effects = term_day1_effects(frames, terms, focus, sector_items)
-    ratios = [p["vol_ratio"] for p in per_item if p["item_id"] in sector_items]
+    item_ids = [i["id"] for i in tagged]
+    effects = term_day1_effects(frames, terms, mayor_id, item_ids)
+    ratios = [p["vol_ratio"] for p in per_item]
     day1 = [e["pct_24h"] for e in effects]
-    n_mayor_terms = sum(1 for t in terms if t.get("mayor") == focus)
-    n_minister_terms = sum(1 for t in terms if t.get("minister") == focus)
+    n_mayor_terms = sum(1 for t in terms if t.get("mayor") == mayor_id and t.get("source") != "gap")
+    n_minister_terms = sum(1 for t in terms if t.get("minister") == mayor_id and t.get("source") != "gap")
     return {
-        "mayor": focus,
+        "mayor": mayor_id,
         "per_item": per_item,
         "day1_effects": effects,
         "aggregate": {
             "n_mayor_terms": n_mayor_terms,
             "n_minister_terms": n_minister_terms,
-            "median_vol_ratio_slayer": (
-                None if not ratios else round(float(np.median(ratios)), 4)
-            ),
-            "mean_day1_pct_slayer": None if not day1 else round(float(np.mean(day1)), 5),
-            "median_day1_pct_slayer": None if not day1 else round(float(np.median(day1)), 5),
+            "median_vol_ratio": None if not ratios else round(float(np.median(ratios)), 4),
+            "mean_day1_pct": None if not day1 else round(float(np.mean(day1)), 5),
+            "median_day1_pct": None if not day1 else round(float(np.median(day1)), 5),
         },
     }
+
+
+def focus_analysis(frames, terms, watch):
+    by_mayor = {}
+    for item in watch["items"]:
+        for mid in item.get("mayors", []):
+            by_mayor.setdefault(mid, []).append(item)
+    out = {}
+    for mid, tagged in by_mayor.items():
+        out[mid] = focus_analysis_for(frames, terms, mid, tagged)
+    return out
 
 
 def current_term(terms, now=None):
@@ -227,6 +240,8 @@ def compute_analytics(frames=None, terms=None, watch=None):
     history.sort(key=lambda e: e["t"], reverse=True)
 
     mom = [momentum(frames[i], i) for i in ids]
+    focus_map = focus_analysis(frames, terms, watch)
+    default_focus = watch.get("mayor_focus")
     out = {
         "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "z_threshold": Z_THRESHOLD,
@@ -234,7 +249,8 @@ def compute_analytics(frames=None, terms=None, watch=None):
         "alert_history": history[:40],
         "momentum": mom,
         "correlations": correlation_matrix(frames, ids),
-        "focus": focus_analysis(frames, terms, watch),
+        "focus": focus_map.get(default_focus) or next(iter(focus_map.values()), None),
+        "focus_by_mayor": focus_map,
         "current_term": current_term(terms),
     }
     return out

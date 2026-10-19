@@ -146,15 +146,29 @@ function renderNeighbors() {
     : '<tr><td class="l muted" colspan="2">not enough data</td></tr>';
 }
 
+function focusForItem() {
+  const byMayor = analytics.focus_by_mayor || {};
+  const ms = item.mayors || [];
+  if (ms.length === 1 && byMayor[ms[0]]) return byMayor[ms[0]];
+  return analytics.focus || {};
+}
+
+function day1EffectsForItem() {
+  const byMayor = analytics.focus_by_mayor || {};
+  const ms = item.mayors || [];
+  const src = ms.length ? ms.map((m) => byMayor[m]).filter(Boolean) : [analytics.focus || {}];
+  return src.flatMap((f) => f.day1_effects || []).filter((e) => e.item_id === item.id);
+}
+
 function renderFocus() {
-  const focus = analytics.focus || {};
+  const focus = focusForItem();
   const mine = (focus.per_item || []).find((p) => p.item_id === item.id);
   const box = document.getElementById("focus-box");
   if (!mine) {
     box.innerHTML = '<span class="muted">not enough labeled history</span>';
     return;
   }
-  const effects = (focus.day1_effects || []).filter((e) => e.item_id === item.id);
+  const effects = day1EffectsForItem();
   const day1 = effects.length ? (effects.reduce((s, e) => s + e.pct_24h, 0) / effects.length) : null;
   box.innerHTML = `<div class="kv">
     <div class="k">Mayor</div><div>${esc((focus.mayor || "").toUpperCase())}</div>
@@ -170,9 +184,7 @@ function renderTerms() {
   const terms = events.terms || [];
   const focusMayors = new Set(item.mayors || []);
   const day1 = Object.fromEntries(
-    ((analytics.focus || {}).day1_effects || [])
-      .filter((e) => e.item_id === item.id)
-      .map((e) => [e.start, e.pct_24h])
+    day1EffectsForItem().map((e) => [e.start, e.pct_24h])
   );
   const inFocus = (t) =>
     focusMayors.size === 0 || focusMayors.has(t.mayor) || focusMayors.has(t.minister) || t.mayor === null;

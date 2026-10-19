@@ -128,7 +128,7 @@ def dense_frame(item_id):
     return df
 
 
-def build_features(item_id, terms, updates=None, ref_ret=None, focus=None):
+def build_features(item_id, terms, updates=None, ref_ret=None, focus_ids=None):
     df = dense_frame(item_id)
     if df is None or len(df) < 200:
         return None
@@ -168,10 +168,14 @@ def build_features(item_id, terms, updates=None, ref_ret=None, focus=None):
     for name in mayor_universe(terms):
         df[f"mayor_{name}"] = (ev["mayor"] == name).astype(float) * ev["covered"]
         df[f"minister_{name}"] = (ev["minister"] == name).astype(float) * MINISTER_WEIGHT * ev["covered"]
-    if focus:
-        df["focus_active"] = np.where(
-            ev["mayor"] == focus, 1.0, np.where(ev["minister"] == focus, MINISTER_WEIGHT, 0.0)
-        ) * ev["covered"]
+    if focus_ids:
+        active = np.zeros(len(grid_index), dtype=float)
+        for fid in focus_ids:
+            active = np.maximum(
+                active,
+                np.where(ev["mayor"] == fid, 1.0, np.where(ev["minister"] == fid, MINISTER_WEIGHT, 0.0)),
+            )
+        df["focus_active"] = active * ev["covered"]
 
     if ref_ret is not None:
         aligned = ref_ret.reindex(grid_index)
@@ -192,10 +196,10 @@ def build_all(cal=None):
     terms = load_terms(cal)
     updates = cal.get("updates", [])
     watch = load_watchlist()
-    focus = watch.get("mayor_focus")
     frames = {}
     for item in watch["items"]:
-        df = build_features(item["id"], terms, updates, ref_ret=None, focus=focus)
+        focus_ids = item.get("mayors") or ([watch["mayor_focus"]] if watch.get("mayor_focus") else None)
+        df = build_features(item["id"], terms, updates, ref_ret=None, focus_ids=focus_ids)
         if df is not None:
             frames[item["id"]] = df
     ref_id = "BOOSTER_COOKIE" if "BOOSTER_COOKIE" in frames else next(iter(frames), None)
