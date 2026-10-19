@@ -1,6 +1,6 @@
 {
-  "phase": "aatrox",
-  "phase_label": "Phase 1 — Mayor Aatrox (Slayer economy)",
+  "phase": "aatrox+marina+cole",
+  "phase_label": "Phases 1–3 — Aatrox · Marina · Cole",
   "mayor_focus": "aatrox",
   "effects": {
     "intervals": [
@@ -62,8 +62,28 @@
     { "id": "ALLIGATOR_SKIN", "label": "Alligator Skin", "group": "drops", "sector": "fishing", "mayors": ["marina"] },
     { "id": "BLUE_RING", "label": "Blue Ring", "group": "drops", "sector": "fishing", "mayors": ["marina"] },
     { "id": "WORM_MEMBRANE", "label": "Worm Membrane", "group": "drops", "sector": "fishing", "mayors": ["marina"] },
-    { "id": "BOOSTER_COOKIE", "label": "Booster Cookie", "group": "control", "sector": "economy", "mayors": ["aatrox", "marina"] },
-    { "id": "RECOMBOBULATOR_3000", "label": "Recombobulator 3000", "group": "control", "sector": "combat", "mayors": ["aatrox", "marina"] },
-    { "id": "ENCHANTMENT_ULTIMATE_LEGION_1", "label": "Ultimate Legion I", "group": "control", "sector": "combat", "mayors": ["aatrox", "marina"] }
+    { "id": "REFINED_MINERAL", "label": "Refined Mineral", "group": "core materials", "sector": "mining", "mayors": ["cole"] },
+    { "id": "GLOSSY_GEMSTONE", "label": "Glossy Gemstone", "group": "core materials", "sector": "mining", "mayors": ["cole"] },
+    { "id": "GEMSTONE_MIXTURE", "label": "Gemstone Mixture", "group": "core materials", "sector": "mining", "mayors": ["cole"] },
+    { "id": "FINE_JADE_GEM", "label": "Fine Jade Gem", "group": "core materials", "sector": "mining", "mayors": ["cole"] },
+    { "id": "PERFECT_JADE_GEM", "label": "Perfect Jade Gem", "group": "core materials", "sector": "mining", "mayors": ["cole"] },
+    { "id": "FINE_JASPER_GEM", "label": "Fine Jasper Gem", "group": "core materials", "sector": "mining", "mayors": ["cole"] },
+    { "id": "ENCHANTED_FLINT", "label": "Enchanted Flint", "group": "core materials", "sector": "mining", "mayors": ["cole"] },
+    { "id": "ENCHANTED_COAL", "label": "Enchanted Coal", "group": "core materials", "sector": "mining", "mayors": ["cole"] },
+    { "id": "GLACITE_AMALGAMATION", "label": "Glacite Amalgamation", "group": "core materials", "sector": "mining", "mayors": ["cole"] },
+    { "id": "ENCHANTED_UMBER", "label": "Enchanted Umber", "group": "core materials", "sector": "mining", "mayors": ["cole"] },
+    { "id": "ENCHANTED_TUNGSTEN", "label": "Enchanted Tungsten", "group": "core materials", "sector": "mining", "mayors": ["cole"] },
+    { "id": "REFINED_TITANIUM", "label": "Refined Titanium", "group": "core materials", "sector": "mining", "mayors": ["cole"] },
+    { "id": "REFINED_MITHRIL", "label": "Refined Mithril", "group": "core materials", "sector": "mining", "mayors": ["cole"] },
+    { "id": "DRILL_ENGINE", "label": "Drill Engine", "group": "core materials", "sector": "mining", "mayors": ["cole"] },
+    { "id": "JADERALD", "label": "Jaderald", "group": "drops", "sector": "mining", "mayors": ["cole"] },
+    { "id": "CORLEONITE", "label": "Corleonite", "group": "drops", "sector": "mining", "mayors": ["cole"] },
+    { "id": "TREASURITE", "label": "Treasurite", "group": "drops", "sector": "mining", "mayors": ["cole"] },
+    { "id": "SLUDGE_JUICE", "label": "Sludge Juice", "group": "drops", "sector": "mining", "mayors": ["cole"] },
+    { "id": "DIVAN_FRAGMENT", "label": "Divan Fragment", "group": "drops", "sector": "mining", "mayors": ["cole"] },
+    { "id": "GLACITE_JEWEL", "label": "Glacite Jewel", "group": "drops", "sector": "mining", "mayors": ["cole"] },
+    { "id": "BOOSTER_COOKIE", "label": "Booster Cookie", "group": "control", "sector": "economy", "mayors": ["aatrox", "marina", "cole"] },
+    { "id": "CATALYST", "label": "Catalyst", "group": "control", "sector": "economy", "mayors": ["aatrox", "marina", "cole"] },
+    { "id": "TITANIC_EXP_BOTTLE", "label": "Titanic Experience Bottle", "group": "control", "sector": "economy", "mayors": ["aatrox", "marina", "cole"] }
   ]
 }
