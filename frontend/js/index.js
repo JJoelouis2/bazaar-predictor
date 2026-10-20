@@ -125,9 +125,12 @@ function activeFocus() {
 }
 
 function renderItems() {
-  const filtered = items
+  let filtered = items
     .filter(matchesMayor)
     .filter((i) => activeGroup === "all" || i.group === activeGroup);
+  if (activeMayor === "all") {
+    filtered = filtered.slice().sort((a, b) => a.label.localeCompare(b.label));
+  }
   const tbody = document.querySelector("#items-table tbody");
   tbody.innerHTML = filtered.map(rowHtml).join("");
   tbody.querySelectorAll("tr").forEach((tr) => {
@@ -261,7 +264,9 @@ function renderMayorEffects() {
 
 function renderPills() {
   const pool = items.filter(matchesMayor);
-  const groups = ["all", ...new Set(pool.map((i) => i.group))];
+  const groups = activeMayor === "all"
+    ? ["all", ...(pool.some((i) => i.group === "control") ? ["control"] : [])]
+    : ["all", ...new Set(pool.map((i) => i.group))];
   if (!groups.includes(activeGroup)) activeGroup = "all";
   const el = document.getElementById("group-pills");
   el.innerHTML = groups

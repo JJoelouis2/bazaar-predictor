@@ -187,6 +187,7 @@ def build_features(item_id, terms, updates=None, ref_ret=None, focus_ids=None):
     df["fwd_24h"] = np.log(df["mid"].shift(-STEPS_24H) / df["mid"])
     df["fwd_px_6h"] = df["mid"].shift(-STEPS_6H)
     df["fwd_px_24h"] = df["mid"].shift(-STEPS_24H)
+    df = df.replace([np.inf, -np.inf], np.nan)
     df["item_id"] = item_id
     return df
 

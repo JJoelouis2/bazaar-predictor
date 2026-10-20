@@ -1,6 +1,6 @@
 {
-  "phase": "aatrox+marina+cole",
-  "phase_label": "Phases 1–3 — Aatrox · Marina · Cole",
+  "phase": "aatrox+marina+cole+diana",
+  "phase_label": "Phases 1–4 — Aatrox · Marina · Cole · Diana",
   "mayor_focus": "aatrox",
   "effects": {
     "intervals": [
@@ -82,8 +82,19 @@
     { "id": "SLUDGE_JUICE", "label": "Sludge Juice", "group": "drops", "sector": "mining", "mayors": ["cole"] },
     { "id": "DIVAN_FRAGMENT", "label": "Divan Fragment", "group": "drops", "sector": "mining", "mayors": ["cole"] },
     { "id": "GLACITE_JEWEL", "label": "Glacite Jewel", "group": "drops", "sector": "mining", "mayors": ["cole"] },
-    { "id": "BOOSTER_COOKIE", "label": "Booster Cookie", "group": "control", "sector": "economy", "mayors": ["aatrox", "marina", "cole"] },
-    { "id": "CATALYST", "label": "Catalyst", "group": "control", "sector": "economy", "mayors": ["aatrox", "marina", "cole"] },
-    { "id": "TITANIC_EXP_BOTTLE", "label": "Titanic Experience Bottle", "group": "control", "sector": "economy", "mayors": ["aatrox", "marina", "cole"] }
+    { "id": "GRIFFIN_FEATHER", "label": "Griffin Feather", "group": "core materials", "sector": "mythological", "mayors": ["diana"] },
+    { "id": "ENCHANTED_GOLD_BLOCK", "label": "Enchanted Gold Block", "group": "core materials", "sector": "mythological", "mayors": ["diana"] },
+    { "id": "ENCHANTED_ANCIENT_CLAW", "label": "Enchanted Ancient Claw", "group": "core materials", "sector": "mythological", "mayors": ["diana"] },
+    { "id": "MYTHOS_FRAGMENT", "label": "Mythos Fragment", "group": "core materials", "sector": "mythological", "mayors": ["diana"] },
+    { "id": "SHARD_CRETAN_BULL", "label": "Cretan Bull Shard", "group": "shards", "sector": "mythological", "mayors": ["diana"] },
+    { "id": "SHARD_HARPY", "label": "Harpy Shard", "group": "shards", "sector": "mythological", "mayors": ["diana"] },
+    { "id": "SHARD_MINOTAUR", "label": "Minotaur Shard", "group": "shards", "sector": "mythological", "mayors": ["diana"] },
+    { "id": "SHARD_KING_MINOS", "label": "King Minos Shard", "group": "shards", "sector": "mythological", "mayors": ["diana"] },
+    { "id": "SHARD_SPHINX", "label": "Sphinx Shard", "group": "shards", "sector": "mythological", "mayors": ["diana"] },
+    { "id": "DAEDALUS_STICK", "label": "Daedalus Stick", "group": "drops", "sector": "mythological", "mayors": ["diana"] },
+    { "id": "ENCHANTMENT_ULTIMATE_CHIMERA_1", "label": "Ultimate Chimera I", "group": "drops", "sector": "mythological", "mayors": ["diana"] },
+    { "id": "BOOSTER_COOKIE", "label": "Booster Cookie", "group": "control", "sector": "economy", "mayors": ["aatrox", "marina", "cole", "diana"] },
+    { "id": "CATALYST", "label": "Catalyst", "group": "control", "sector": "economy", "mayors": ["aatrox", "marina", "cole", "diana"] },
+    { "id": "TITANIC_EXP_BOTTLE", "label": "Titanic Experience Bottle", "group": "control", "sector": "economy", "mayors": ["aatrox", "marina", "cole", "diana"] }
   ]
 }
