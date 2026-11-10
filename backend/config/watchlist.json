@@ -1,6 +1,6 @@
 {
-  "phase": "aatrox+marina+cole+diana",
-  "phase_label": "Phases 1–4 — Aatrox · Marina · Cole · Diana",
+  "phase": "aatrox+marina+cole+diana+finnegan",
+  "phase_label": "Phases 1–5 — Aatrox · Marina · Cole · Diana · Finnegan",
   "mayor_focus": "aatrox",
   "effects": {
     "intervals": [
@@ -19,10 +19,7 @@
     { "id": "finnegan", "name": "Finnegan", "phase": 5, "tagline": "Farming" },
     { "id": "foxy", "name": "Foxy", "phase": 6, "tagline": "Events (Spooky / Season of Jerry)" },
     { "id": "paul", "name": "Paul", "phase": 7, "tagline": "Dungeons" },
-    { "id": "diaz", "name": "Diaz", "phase": 8, "tagline": "Economy & NPC shops" },
-    { "id": "jerry", "name": "Jerry", "phase": 9, "tagline": "Special — Jerry's Workshop" },
-    { "id": "derpy", "name": "Derpy", "phase": 10, "tagline": "Special — double drops & XP" },
-    { "id": "scorpius", "name": "Scorpius", "phase": 11, "tagline": "Special — darker auctions" }
+    { "id": "diaz", "name": "Diaz", "phase": 8, "tagline": "Economy & NPC shops" }
   ],
   "items": [
     { "id": "SUMMONING_EYE", "label": "Summoning Eye", "group": "core materials", "sector": "slayer", "mayors": ["aatrox"] },
@@ -93,8 +90,29 @@
     { "id": "SHARD_SPHINX", "label": "Sphinx Shard", "group": "shards", "sector": "mythological", "mayors": ["diana"] },
     { "id": "DAEDALUS_STICK", "label": "Daedalus Stick", "group": "drops", "sector": "mythological", "mayors": ["diana"] },
     { "id": "ENCHANTMENT_ULTIMATE_CHIMERA_1", "label": "Ultimate Chimera I", "group": "drops", "sector": "mythological", "mayors": ["diana"] },
-    { "id": "BOOSTER_COOKIE", "label": "Booster Cookie", "group": "control", "sector": "economy", "mayors": ["aatrox", "marina", "cole", "diana"] },
-    { "id": "CATALYST", "label": "Catalyst", "group": "control", "sector": "economy", "mayors": ["aatrox", "marina", "cole", "diana"] },
-    { "id": "TITANIC_EXP_BOTTLE", "label": "Titanic Experience Bottle", "group": "control", "sector": "economy", "mayors": ["aatrox", "marina", "cole", "diana"] }
+    { "id": "ENCHANTED_WHEAT", "label": "Enchanted Wheat", "group": "core materials", "sector": "farming", "mayors": ["finnegan"] },
+    { "id": "ENCHANTED_HAY_BALE", "label": "Enchanted Hay Bale", "group": "core materials", "sector": "farming", "mayors": ["finnegan"] },
+    { "id": "ENCHANTED_GOLDEN_CARROT", "label": "Enchanted Golden Carrot", "group": "core materials", "sector": "farming", "mayors": ["finnegan"] },
+    { "id": "MUTANT_NETHER_STALK", "label": "Mutant Nether Stalk", "group": "core materials", "sector": "farming", "mayors": ["finnegan"] },
+    { "id": "ENCHANTED_SUGAR_CANE", "label": "Enchanted Sugar Cane", "group": "core materials", "sector": "farming", "mayors": ["finnegan"] },
+    { "id": "CROPIE", "label": "Cropie", "group": "core materials", "sector": "farming", "mayors": ["finnegan"] },
+    { "id": "SQUASH", "label": "Squash", "group": "core materials", "sector": "farming", "mayors": ["finnegan"] },
+    { "id": "FERMENTO", "label": "Fermento", "group": "core materials", "sector": "farming", "mayors": ["finnegan"] },
+    { "id": "HELIANTHUS", "label": "Helianthus", "group": "core materials", "sector": "farming", "mayors": ["finnegan"] },
+    { "id": "FINE_FLOUR", "label": "Fine Flour", "group": "core materials", "sector": "farming", "mayors": ["finnegan"] },
+    { "id": "COMPOST", "label": "Compost", "group": "core materials", "sector": "farming", "mayors": ["finnegan"] },
+    { "id": "PLANT_MATTER", "label": "Plant Matter", "group": "core materials", "sector": "farming", "mayors": ["finnegan"] },
+    { "id": "SALTED_SUNFLOWER_SEEDS", "label": "Salted Sunflower Seeds", "group": "core materials", "sector": "farming", "mayors": ["finnegan"] },
+    { "id": "CRYSTALIZED_MOONLIGHT", "label": "Crystalized Moonlight", "group": "core materials", "sector": "farming", "mayors": ["finnegan"] },
+    { "id": "CORNUCOPIA", "label": "Cornucopia", "group": "drops", "sector": "farming", "mayors": ["finnegan"] },
+    { "id": "TOOL_EXP_CAPSULE", "label": "Tool EXP Capsule", "group": "drops", "sector": "farming", "mayors": ["finnegan"] },
+    { "id": "JACOBS_TICKET", "label": "Jacob's Ticket", "group": "drops", "sector": "farming", "mayors": ["finnegan"] },
+    { "id": "OVERDRIVE_GARDEN_CHIP", "label": "Overdrive Garden Chip", "group": "drops", "sector": "farming", "mayors": ["finnegan"] },
+    { "id": "RAREFINDER_GARDEN_CHIP", "label": "Rarefinder Garden Chip", "group": "drops", "sector": "farming", "mayors": ["finnegan"] },
+    { "id": "ENCHANTMENT_FEAST_1", "label": "Feast I", "group": "drops", "sector": "farming", "mayors": ["finnegan"] },
+    { "id": "FEAST_FLASK", "label": "Feast Flask", "group": "drops", "sector": "farming", "mayors": ["finnegan"] },
+    { "id": "BOOSTER_COOKIE", "label": "Booster Cookie", "group": "control", "sector": "economy", "mayors": ["aatrox", "marina", "cole", "diana", "finnegan"] },
+    { "id": "CATALYST", "label": "Catalyst", "group": "control", "sector": "economy", "mayors": ["aatrox", "marina", "cole", "diana", "finnegan"] },
+    { "id": "TITANIC_EXP_BOTTLE", "label": "Titanic Experience Bottle", "group": "control", "sector": "economy", "mayors": ["aatrox", "marina", "cole", "diana", "finnegan"] }
   ]
 }
