@@ -1,6 +1,6 @@
 {
-  "phase": "aatrox+marina+cole+diana+finnegan+foxy",
-  "phase_label": "Phases 1–6 — Aatrox · Marina · Cole · Diana · Finnegan · Foxy",
+  "phase": "aatrox+marina+cole+diana+finnegan+foxy+paul+diaz",
+  "phase_label": "Phases 1–8 — Aatrox · Marina · Cole · Diana · Finnegan · Foxy · Paul · Diaz",
   "mayor_focus": "aatrox",
   "effects": {
     "intervals": [
@@ -120,8 +120,36 @@
     { "id": "GREEN_CANDY", "label": "Green Candy", "group": "drops", "sector": "events", "mayors": ["foxy"] },
     { "id": "ECTOPLASM", "label": "Ectoplasm", "group": "drops", "sector": "events", "mayors": ["foxy"] },
     { "id": "PUMPKIN_GUTS", "label": "Pumpkin Guts", "group": "drops", "sector": "events", "mayors": ["foxy"] },
-    { "id": "BOOSTER_COOKIE", "label": "Booster Cookie", "group": "control", "sector": "economy", "mayors": ["aatrox", "marina", "cole", "diana", "finnegan", "foxy"] },
-    { "id": "CATALYST", "label": "Catalyst", "group": "control", "sector": "economy", "mayors": ["aatrox", "marina", "cole", "diana", "finnegan", "foxy"] },
-    { "id": "TITANIC_EXP_BOTTLE", "label": "Titanic Experience Bottle", "group": "control", "sector": "economy", "mayors": ["aatrox", "marina", "cole", "diana", "finnegan", "foxy"] }
+    { "id": "DUNGEON_CHEST_KEY", "label": "Dungeon Chest Key", "group": "core materials", "sector": "dungeons", "mayors": ["paul"] },
+    { "id": "KISMET_FEATHER", "label": "Kismet Feather", "group": "core materials", "sector": "dungeons", "mayors": ["paul"] },
+    { "id": "WITHER_CATALYST", "label": "Wither Catalyst", "group": "core materials", "sector": "dungeons", "mayors": ["paul"] },
+    { "id": "ARCHITECT_FIRST_DRAFT", "label": "Architect's First Draft", "group": "core materials", "sector": "dungeons", "mayors": ["paul"] },
+    { "id": "RECOMBOBULATOR_3000", "label": "Recombobulator 3000", "group": "core materials", "sector": "dungeons", "mayors": ["paul"] },
+    { "id": "FUMING_POTATO_BOOK", "label": "Fuming Potato Book", "group": "core materials", "sector": "dungeons", "mayors": ["paul"] },
+    { "id": "PRECURSOR_GEAR", "label": "Precursor Gear", "group": "core materials", "sector": "dungeons", "mayors": ["paul"] },
+    { "id": "GIANT_FRAGMENT_DIAMOND", "label": "Diamond Giant Fragment", "group": "drops", "sector": "dungeons", "mayors": ["paul"] },
+    { "id": "GIANT_FRAGMENT_LASER", "label": "Laser Giant Fragment", "group": "drops", "sector": "dungeons", "mayors": ["paul"] },
+    { "id": "GOLEM_POPPY", "label": "Golem Poppy", "group": "drops", "sector": "dungeons", "mayors": ["paul"] },
+    { "id": "SPIRIT_WING", "label": "Spirit Wing", "group": "drops", "sector": "dungeons", "mayors": ["paul"] },
+    { "id": "FIRST_MASTER_STAR", "label": "First Master Star", "group": "drops", "sector": "dungeons", "mayors": ["paul"] },
+    { "id": "THIRD_MASTER_STAR", "label": "Third Master Star", "group": "drops", "sector": "dungeons", "mayors": ["paul"] },
+    { "id": "FIFTH_MASTER_STAR", "label": "Fifth Master Star", "group": "drops", "sector": "dungeons", "mayors": ["paul"] },
+    { "id": "ESSENCE_WITHER", "label": "Wither Essence", "group": "drops", "sector": "dungeons", "mayors": ["paul"] },
+    { "id": "ESSENCE_UNDEAD", "label": "Undead Essence", "group": "drops", "sector": "dungeons", "mayors": ["paul"] },
+    { "id": "IMPLOSION_SCROLL", "label": "Implosion Scroll", "group": "scrolls", "sector": "dungeons", "mayors": ["paul"] },
+    { "id": "WITHER_SHIELD_SCROLL", "label": "Wither Shield Scroll", "group": "scrolls", "sector": "dungeons", "mayors": ["paul"] },
+    { "id": "ENCHANTMENT_ULTIMATE_LEGION_1", "label": "Ultimate Legion I", "group": "enchantments", "sector": "dungeons", "mayors": ["paul"] },
+    { "id": "ENCHANTMENT_ULTIMATE_SOUL_EATER_1", "label": "Ultimate Soul Eater I", "group": "enchantments", "sector": "dungeons", "mayors": ["paul"] },
+    { "id": "STOCK_OF_STONKS", "label": "Stock of Stonks", "group": "currency", "sector": "economy", "mayors": ["diaz"] },
+    { "id": "FRESHLY_MINTED_COINS", "label": "Freshly Minted Coins", "group": "currency", "sector": "economy", "mayors": ["diaz"] },
+    { "id": "BLOOD_STAINED_COINS", "label": "Blood-Stained Coins", "group": "currency", "sector": "economy", "mayors": ["diaz"] },
+    { "id": "BLOOD_SOAKED_COINS", "label": "Blood-Soaked Coins", "group": "currency", "sector": "economy", "mayors": ["diaz"] },
+    { "id": "AVARICIOUS_CHALICE", "label": "Avaricious Chalice", "group": "items", "sector": "economy", "mayors": ["diaz"] },
+    { "id": "GOLDEN_FRAGMENT", "label": "Golden Fragment", "group": "items", "sector": "economy", "mayors": ["diaz"] },
+    { "id": "GOLDEN_BOUNTY", "label": "Golden Bounty", "group": "items", "sector": "economy", "mayors": ["diaz"] },
+    { "id": "ENCHANTED_DANDELION", "label": "Enchanted Dandelion", "group": "materials", "sector": "economy", "mayors": ["diaz"] },
+    { "id": "BOOSTER_COOKIE", "label": "Booster Cookie", "group": "control", "sector": "economy", "mayors": ["aatrox", "marina", "cole", "diana", "finnegan", "foxy", "paul", "diaz"] },
+    { "id": "CATALYST", "label": "Catalyst", "group": "control", "sector": "economy", "mayors": ["aatrox", "marina", "cole", "diana", "finnegan", "foxy", "paul", "diaz"] },
+    { "id": "TITANIC_EXP_BOTTLE", "label": "Titanic Experience Bottle", "group": "control", "sector": "economy", "mayors": ["aatrox", "marina", "cole", "diana", "finnegan", "foxy", "paul", "diaz"] }
   ]
 }
