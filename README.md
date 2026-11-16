@@ -2,10 +2,51 @@
 
 SkyBlock bazaar price intelligence: event-aware analytics (mayor / minister terms, z-scores,
 cross-item correlation) and short-horizon forecasts for a curated watchlist of items,
-published as a static site on GitHub Pages (https://jjoelouis2.github.io/bazaar-predictor).
+published as a static site on GitHub Pages.
 
-The watchlist covers eight mayor-focused phases — Aatrox, Marina, Cole, Diana, Finnegan, Foxy,
-Paul and Diaz — with 129 tracked items.
+- **Live site:** https://jjoelouis2.github.io/bazaar-predictor
+- **Watchlist:** 129 items across 8 mayor-focused phases
+- **Models:** XGBoost (primary) and SARIMAX (baseline) for 6h and 24h forward log-returns
+- **Grid:** 2h snapshots, with historical backfill from Coflnet
+
+## What it does
+
+1. Collects live bazaar prices and election state from the Hypixel API every 2h.
+2. Backfills per-item 2h history from Coflnet, respecting its rate limit.
+3. Builds dense per-item feature frames with mayor, minister, event and game-update terms.
+4. Trains XGBoost and SARIMAX models, predicts 6h/24h returns, and computes z-score alerts,
+   correlations and static inauguration effects.
+5. Rebuilds the static `frontend/data` bundle; GitHub Actions commits refreshed data and deploys
+   the site to Pages.
+
+## Watchlist
+
+The watchlist contains **129 tracked items**: **126 phase-specific items** plus **3 cross-phase
+control items** (Booster Cookie, Catalyst, Titanic Experience Bottle).
+
+| phase | mayor | focus | items |
+| --- | --- | --- | --- |
+| 1 | Aatrox | Slayer economy | 17 |
+| 2 | Marina | Fishing & sea creatures | 20 |
+| 3 | Cole | Mining | 20 |
+| 4 | Diana | Mythological creatures & pets | 11 |
+| 5 | Finnegan | Farming | 21 |
+| 6 | Foxy | Events (Spooky / Season of Jerry) | 14 |
+| 7 | Paul | Dungeons | 20 |
+| 8 | Diaz | Economy & NPC shops | 8 |
+
+Counts exclude the control items. Five items are tagged to two phases, so the tagged totals are
+larger than the 126 unique phase-specific items.
+
+**Paul (20):** core materials (Dungeon Chest Key, Kismet Feather, Wither Catalyst, Architect's
+First Draft, Recombobulator 3000, Fuming Potato Book, Precursor Gear), drops (Diamond and Laser
+Giant Fragments, Golem Poppy, Spirit Wing, First/Third/Fifth Master Star, Wither and Undead
+Essence), scrolls (Implosion, Wither Shield) and enchantments (Ultimate Legion I, Ultimate Soul
+Eater I).
+
+**Diaz (8):** currency (Stock of Stonks, Freshly Minted Coins, Blood-Stained Coins, Blood-Soaked
+Coins), items (Avaricious Chalice, Golden Fragment, Golden Bounty) and materials (Enchanted
+Dandelion).
 
 ## Data sources
 
@@ -21,7 +62,7 @@ Paul and Diaz — with 129 tracked items.
 
 ```
 backend/
-  config/watchlist.json        tracked items + phase metadata
+  config/watchlist.json        tracked items, phases, mayor tabs
   config/event_calendar.json   mayor/minister terms, minister_weight, game updates
   datastore/history/*.jsonl    per-item 2h price history (tracked)
   datastore/elections.jsonl    live mayor/minister transitions (tracked)
@@ -35,22 +76,12 @@ backend/
   src/predict.py               latest-row inference -> frontend/data/predictions.json
   src/build.py                 assemble all frontend/data/*.json
   src/run_pipeline.py          calendar -> collect -> train -> predict -> build
-frontend/                      static site (vanilla JS + Chart.js, renders JSON only)
+frontend/
+  index.html, item.html, ...   static site (vanilla JS + Chart.js, renders JSON only)
+  data/*.json                  items, predictions, analytics, mayor effects, events, meta
+  data/series/*.json           per-item 2h series for charts
 .github/workflows/             collect.yml (2h cron + deploy), backfill.yml, deploy.yml
 ```
-
-## Mayor phases
-
-| phase | mayor | focus |
-| --- | --- | --- |
-| 1 | Aatrox | Slayer economy |
-| 2 | Marina | Fishing & sea creatures |
-| 3 | Cole | Mining |
-| 4 | Diana | Mythological creatures & pets |
-| 5 | Finnegan | Farming |
-| 6 | Foxy | Events (Spooky / Season of Jerry) |
-| 7 | Paul | Dungeons |
-| 8 | Diaz | Economy & NPC shops |
 
 ## Local setup
 
@@ -70,15 +101,15 @@ py -3.13 -m venv .venv
 # open http://127.0.0.1:8765
 ```
 
-Optionally create `.env` with `HYPIXEL_API_KEY=...` (loaded automatically if you use python-dotenv;
-otherwise set the environment variable).
+Optionally create `.env` with `HYPIXEL_API_KEY=...` (loaded automatically if you use
+python-dotenv; otherwise set the environment variable).
 
 Useful flags:
 
 ```powershell
-python backend\src\backfill.py --only SUMMONING_EYE --start 2024-01-01
-python backend\src\train.py --window-days 365 --items SUMMONING_EYE BOOSTER_COOKIE
-python backend\src\run_pipeline.py --skip calendar collect
+.\.venv\Scripts\python.exe backend\src\backfill.py --only SUMMONING_EYE --start 2024-01-01
+.\.venv\Scripts\python.exe backend\src\train.py --window-days 365 --items SUMMONING_EYE BOOSTER_COOKIE
+.\.venv\Scripts\python.exe backend\src\run_pipeline.py --skip calendar collect
 ```
 
 ## Configuration
@@ -114,8 +145,7 @@ The file-level `mayor_focus` (`aatrox`) drives the focus analysis.
   (`--window-days 730` default), so models track regime changes.
 - XGBoost is the primary model; SARIMAX(1,1,0) with event exog is a walk-forward baseline.
   Reported metrics: MAE, MAE-vs-naive (skill = 1 − MAE/MAE_naive), MAPE on price, directional
-  accuracy.
-- Backtesting: temporal split + walk-forward metrics (MAE, RMSE, skill, direction accuracy).
+  accuracy, RMSE and skill from temporal-split and walk-forward backtests.
 - Alerts: |z| of the 30d rolling z-score ≥ 3 (with 90d crossing history). Cross-item Pearson
   correlation of 2h returns uses a |z30| ≤ 3 filter and a 90d window.
 - Inauguration effect (static): for each mayor's tagged items, computes median log-return over
@@ -123,6 +153,14 @@ The file-level `mayor_focus` (`aatrox`) drives the focus analysis.
   separately), requiring ≥ 6 grid points and `stale_h < 48`; reports median %, term/item counts,
   positive-rate, and implied price = current mid × (1 + median). Static historical medians — not
   a live forecast, not financial advice.
+
+## Current data snapshot
+
+- Latest 2h bar: **2026-11-13T04:00:00Z**
+- 129 items and 129 chart series
+- 217 mayor/minister terms in the calendar
+- 1 active alert and 15 correlated pairs in the latest rebuild
+- Latest election transition: Foxy (mayor) / Finnegan (minister), year 525
 
 ## CI/CD (GitHub Actions)
 
